@@ -6,9 +6,17 @@
  * Return: void
  */
 
+void sort_beg(listint_t *tmp_aux, listint_t *tmp)
+{
+	tmp_aux->prev = NULL;
+	tmp_aux->next = tmp;
+	tmp->prev = tmp_aux;
+}
+
 void insertion_sort_list(listint_t **list)
 {
-	listint_t *tmp = NULL, *tmp_prv = NULL, *tmp_nxt = NULL;
+	int sort = 0;
+	listint_t *tmp = NULL, *tmp_aux = NULL, *tmp_nxt = NULL;
 
 	if (*list)
 	{
@@ -17,18 +25,49 @@ void insertion_sort_list(listint_t **list)
 		{
 			if (tmp->n > tmp->next->n)
 			{
-				if (tmp->prev)
+				if (tmp->next->next)
 				{
-					tmp_nxt = tmp->next;
-					tmp_nxt->prev->prev = tmp_prv;
-					tmp_nxt->prev->next = tmp;
-					tmp->prev = tmp->next->prev;
+					tmp_aux = tmp->next;
+					tmp_nxt = tmp->next->next;
+					tmp->next = tmp_nxt;
 					tmp_nxt->prev = tmp;
-					tmp_prv->next = tmp->prev;
+					if (!tmp->prev)
+					{
+						sort_beg(tmp_aux, tmp);
+						*list = tmp_aux;
+					}
+					else
+					{
+						tmp = tmp->prev;
+						tmp_nxt = tmp->next;
+						tmp->next = tmp_aux;
+						tmp_aux->prev = tmp;
+						tmp_aux->next = tmp_nxt;
+						tmp_nxt->prev = tmp_aux;
+					}
+					sort = 1;
 				}
+				else if (!tmp->next->next)
+				{
+					tmp_aux = tmp->next;
+					tmp->next = NULL;
+					tmp = tmp->prev;
+					tmp_nxt = tmp->next;
+					tmp->next = tmp_aux;
+					tmp_aux->prev = tmp;
+					tmp_aux->next = tmp_nxt;
+					tmp_nxt->prev = tmp_aux;
+					sort = 1;
+					}
 				print_list(*list);
 			}
-			tmp = tmp->next;
+			if (sort)
+			{
+				tmp = *list;
+				sort = 0;
+			}
+			else
+				tmp = tmp->next;
 		}
 	}
 }
