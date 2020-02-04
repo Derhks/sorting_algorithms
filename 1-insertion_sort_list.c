@@ -12,8 +12,11 @@ void insert_end(listint_t *tmp, listint_t *tmp_aux, listint_t *tmp_nxt);
 void insertion_sort_list(listint_t **list)
 {
 	int sort = 0;
-	listint_t *tmp = *list, *tmp_aux = NULL, *tmp_nxt = NULL;
+	listint_t *tmp = NULL, *tmp_aux = NULL, *tmp_nxt = NULL;
 
+	if (list == NULL)
+		return;
+	tmp = *list;
 	while (*list && tmp->next)
 	{
 		if (tmp->n > tmp->next->n)
